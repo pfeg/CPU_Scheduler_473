@@ -54,7 +54,7 @@ bool MyScheduler::Dispatch()
 	switch(policy)
 	{
 		case FCFS:		//First Come First Serve
-
+      FirstComeFirstServed();
 			break;
 		case STRFwoP:	//Shortest Time Remaining First, without preemption
       ShortestTimeRemainingWithoutPreemption();
@@ -76,7 +76,38 @@ bool MyScheduler::Dispatch()
 
 void MyScheduler::FirstComeFirstServed()
 {
-  
+  // Moving threads that have arrived from Threads to ReadyQueue and sorting them by remaining time.
+  while (Threads.size() != 0 && Threads.front()->arriving_time <= timer)
+  {
+    ThreadDescriptorBlock* temp = Threads.front();
+    ReadyQueue.push_back(temp);
+    Threads.pop_front();
+  }
+  //#debug
+  cout<< "Time: " << timer << endl;
+  PrintThreads("ReadyQueue after threads' arrival", ReadyQueue);
+  PrintCPUs("CPUs before Algorithm.");
+  if (ReadyQueue.size() != 0)
+  {
+    for (int cpu_i = 0; cpu_i < num_cpu; cpu_i++)
+    {
+      // nothing in this cpu.
+      if (CPUs[cpu_i] == NULL)
+      {
+        if (ReadyQueue.size() != 0)
+        {
+          // save reference to this thread in this cpu.
+          CPUs[cpu_i] = ReadyQueue.front();
+          // take thread out of readyQueue.
+          ReadyQueue.pop_front();
+        }
+      }
+    }
+    
+  }
+  //#debug
+  PrintCPUs("CPUs after algorithm.");
+  PrintThreads("ReadyQueue after after algorithm.", ReadyQueue);
 }
 
 void MyScheduler::ShortestTimeRemainingWithoutPreemption()
