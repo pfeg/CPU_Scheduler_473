@@ -8,39 +8,26 @@
 
 using namespace std;
 
-
 int main(int argc, char* argv[])
 {
-	
-  int numberOfCPUs = 3;
-  
-  MyScheduler scheduler = MyScheduler(STRFwP, numberOfCPUs);
-
+  int numberOfCPUs = 5;
+  MyScheduler scheduler = MyScheduler(STRFwoP, numberOfCPUs);
 	srand(time(NULL));
-
-	
-  int totalThreads = 20;
+  int totalThreads = 40;
   
-  
-  
-  int priority = 3;
-  
+//  for (int i = 0; i < totalThreads; i++)
+//  {
+//    scheduler.CreateThread(i, (rand() % 20) + 1, priority, i);
+//  }
   
   for (int i = 0; i < totalThreads; i++)
-  {
-    scheduler.CreateThread(i, (rand() % 20) + 1, priority, i);
-  }
-//  for (int i = 0; i < totalThreads; i++)
-//	{
-//		scheduler.CreateThread(i + (rand() % numberOfCPUs + 1), 100, numberOfCPUs, 7);
-//	}
+	{
+		scheduler.CreateThread(i + rand() % 20, rand() % 40, rand() % 20, i);
+	}
 
 	scheduler.PrintThreads("Threads", scheduler.Threads);
 
 	scheduler.Go();
-
-
-
 	return 0;
 }
 

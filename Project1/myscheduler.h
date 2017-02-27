@@ -11,13 +11,8 @@
 #include "scheduler.h"
 #include <list>
 
-//Define your data structure here.
-	/*
-	*
-	*
-	*
-	*
-	*/
+#include <string>
+
 
 class MyScheduler: public Scheduler {
 public:
@@ -31,6 +26,7 @@ public:
 	// a list of Threads ready to be executed.
 	list<ThreadDescriptorBlock*> ReadyQueue;
 
+
 	// a list of all the Threads;
 	list<ThreadDescriptorBlock*> Threads;
   
@@ -39,14 +35,15 @@ public:
   void PrintCPUs(string note);
   
 private:
-  
-  
   void InsertThreadByLeastRemainingTime(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList);
   
   void FirstComeFirstServed();
   
-  // Shortest Time Remaining
-  void SortestTimeRemainingPreemption();
+  // Shortest Time Remaining with Preemption.
+  void ShortestTimeRemainingPreemption();
+  
+  // Shortest Time Remaining without Preemption.
+  void ShortestTimeRemainingWithoutPreemption();
   
   void PrintThreadBlock(const ThreadDescriptorBlock *ThreadBlock);
   
