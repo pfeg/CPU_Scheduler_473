@@ -10,9 +10,7 @@
 
 #include "scheduler.h"
 #include <list>
-
 #include <string>
-
 
 class MyScheduler: public Scheduler {
 public:
@@ -26,7 +24,6 @@ public:
 	// a list of Threads ready to be executed.
 	list<ThreadDescriptorBlock*> ReadyQueue;
 
-
 	// a list of all the Threads;
 	list<ThreadDescriptorBlock*> Threads;
   
@@ -35,7 +32,12 @@ public:
   void PrintCPUs(string note);
   
 private:
+
   void InsertThreadByLeastRemainingTime(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList);
+  
+  // Inserts Thread into list with it's priority number is
+  //  lower than all others.
+  void InsertThreadByPriority(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList);
   
   void FirstComeFirstServed();
   
@@ -44,6 +46,9 @@ private:
   
   // Shortest Time Remaining without Preemption.
   void ShortestTimeRemainingWithoutPreemption();
+  
+  // Priority Based Scheduling, with preemption
+  void PrioritySchedulingWithPreemption();
   
   void PrintThreadBlock(const ThreadDescriptorBlock *ThreadBlock);
   

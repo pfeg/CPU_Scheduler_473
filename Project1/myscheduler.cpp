@@ -50,7 +50,6 @@ bool MyScheduler::Dispatch()
       return false;
     }
   }
-
   // 3. execute scheduling policy.
 	switch(policy)
 	{
@@ -61,20 +60,15 @@ bool MyScheduler::Dispatch()
       ShortestTimeRemainingWithoutPreemption();
 			break;
 		case STRFwP:	//Shortest Time Remaining First, with preemption
-
       ShortestTimeRemainingPreemption();
 			break;
 		case PBS:		//Priority Based Scheduling, with preemption
-
+      PrioritySchedulingWithPreemption();
 			break;
 		default :
 			cout<<"Invalid policy!";
 			throw 0;
 	}
-	
-	if (timer > 100)
-		return false;
-
 	return true;
 }
 
@@ -136,10 +130,11 @@ void MyScheduler::ShortestTimeRemainingPreemption()
   cout<< "Time: " << timer << endl;
   PrintThreads("ReadyQueue after threads' arrival", ReadyQueue);
   PrintCPUs("CPUs before Algorithm.");
-
+  
+  
   // true if thread swap in cpu happens;
   bool did_swap = false;
-
+  
   do {
     if (ReadyQueue.size() != 0)
     {
@@ -198,11 +193,99 @@ void MyScheduler::ShortestTimeRemainingPreemption()
   PrintThreads("ReadyQueue after after algorithm.", ReadyQueue);
 }
 
+void MyScheduler::PrioritySchedulingWithPreemption()
+{
+  // Moving threads that have arrived from Threads to ReadyQueue and sorting them by remaining time.
+  while (Threads.size() != 0 && Threads.front()->arriving_time <= timer)
+  {
+    ThreadDescriptorBlock* temp = Threads.front();
+    InsertThreadByPriority(temp, ReadyQueue);
+    Threads.pop_front();
+  }
+  //#debug
+  cout<< "Time: " << timer << endl;
+  PrintThreads("ReadyQueue after threads' arrival", ReadyQueue);
+  PrintCPUs("CPUs before Algorithm.");
+  
+  
+  // true if thread swap in cpu happens;
+  bool did_swap = false;
+  
+  do {
+    if (ReadyQueue.size() != 0)
+    {
+      // CPU with a thread currently with the largest
+      // reamining time compared to the other cpus.
+      // -1 means no CPU has a thread with remaining time greater
+      //  than some thread in the readyqueue.
+      int largest_cpu_remaining_time = -1;
+      for (int cpu_i = 0; cpu_i < num_cpu; cpu_i++)
+      {
+        // nothing in this cpu.
+        if (CPUs[cpu_i] == NULL)
+        {
+          largest_cpu_remaining_time = cpu_i;
+          
+          //exit loop
+          cpu_i = num_cpu;
+        }
+        else if (CPUs[cpu_i]->remaining_time > ReadyQueue.front()->remaining_time)
+        {
+          if (largest_cpu_remaining_time == -1 ||
+              CPUs[largest_cpu_remaining_time]->remaining_time < CPUs[cpu_i]->remaining_time)
+          {
+            largest_cpu_remaining_time = cpu_i;
+          }
+        }
+      }
+      if (largest_cpu_remaining_time != -1)
+      {
+        // temporarly save thread coming out of CPU.
+        ThreadDescriptorBlock *temp = CPUs[largest_cpu_remaining_time];
+        // save reference to this thread in this cpu.
+        CPUs[largest_cpu_remaining_time] = ReadyQueue.front();
+        // take thread out of readyQueue.
+        ReadyQueue.pop_front();
+        // a swap of two threads occurred.
+        did_swap = true;
+        // put thread that was in CPU back in readyQueue.
+        if (temp != NULL)
+        {
+          InsertThreadByPriority(temp, ReadyQueue);
+        }
+      }
+      else
+      {
+        did_swap = false;
+      }
+    }
+    else
+    {
+      did_swap = false;
+    }
+  } while (did_swap);
+  //#debug
+  PrintCPUs("CPUs after algorithm.");
+  PrintThreads("ReadyQueue after after algorithm.", ReadyQueue);
+  
+}
+
 void MyScheduler::InsertThreadByLeastRemainingTime(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList)
 {
   list<ThreadDescriptorBlock*>::iterator ThreadIter;
   ThreadIter = ThreadList.begin();
   while (ThreadIter != ThreadList.end() && temp->remaining_time > (*ThreadIter)->remaining_time)
+  {
+    ThreadIter++;
+  }
+  ThreadList.insert(ThreadIter, temp);
+}
+
+void MyScheduler::InsertThreadByPriority(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList)
+{
+  list<ThreadDescriptorBlock*>::iterator ThreadIter;
+  ThreadIter = ThreadList.begin();
+  while (ThreadIter != ThreadList.end() && temp->priority > (*ThreadIter)->priority)
   {
     ThreadIter++;
   }
@@ -216,7 +299,6 @@ void MyScheduler::PrintThreads(string name, list<ThreadDescriptorBlock*> threadL
   cout << "------------" << endl;
   cout << name << endl;
   cout << "------------" << endl;
-
   while (Threaditer != threadList.end())
   {
     PrintThreadBlock((*Threaditer));
