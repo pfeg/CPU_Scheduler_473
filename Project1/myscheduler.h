@@ -9,6 +9,7 @@
    which they might find helpful.*/
 
 #include "scheduler.h"
+#include <list>
 
 //Define your data structure here.
 	/*
@@ -23,7 +24,32 @@ public:
 	MyScheduler(Policy p, unsigned int n) : Scheduler(p, n) {}
 	bool Dispatch() override; //Function to implement scheduling policy and to keep a check on processed threads
 	void CreateThread(int arriving_time, int remaining_time, int priority, int tid) override; //Function to create threads and insert them in student defined data structure
+  
+  // prints queue with name.
+  //void PrintQueue(string name, list<ThreadsList*>);
+  
+	// a list of Threads ready to be executed.
+	list<ThreadDescriptorBlock*> ReadyQueue;
 
+	// a list of all the Threads;
+	list<ThreadDescriptorBlock*> Threads;
+  
+  void PrintThreads(string name, list<ThreadDescriptorBlock*> threadList);
+  
+  void PrintCPUs(string note);
+  
+private:
+  
+  
+  void InsertThreadByLeastRemainingTime(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList);
+  
+  void FirstComeFirstServed();
+  
+  // Shortest Time Remaining
+  void SortestTimeRemainingPreemption();
+  
+  void PrintThreadBlock(const ThreadDescriptorBlock *ThreadBlock);
+  
 	//Declare additional methods(s) below if needed.
 	/*
 	*
@@ -31,4 +57,5 @@ public:
 	*
 	*
 	*/
+  
 };
