@@ -50,6 +50,7 @@ bool MyScheduler::Dispatch()
       return false;
     }
   }
+
   // 3. execute scheduling policy.
 	switch(policy)
 	{
@@ -60,6 +61,7 @@ bool MyScheduler::Dispatch()
       ShortestTimeRemainingWithoutPreemption();
 			break;
 		case STRFwP:	//Shortest Time Remaining First, with preemption
+
       ShortestTimeRemainingPreemption();
 			break;
 		case PBS:		//Priority Based Scheduling, with preemption
@@ -69,6 +71,10 @@ bool MyScheduler::Dispatch()
 			cout<<"Invalid policy!";
 			throw 0;
 	}
+	
+	if (timer > 100)
+		return false;
+
 	return true;
 }
 
@@ -130,11 +136,10 @@ void MyScheduler::ShortestTimeRemainingPreemption()
   cout<< "Time: " << timer << endl;
   PrintThreads("ReadyQueue after threads' arrival", ReadyQueue);
   PrintCPUs("CPUs before Algorithm.");
-  
-  
+
   // true if thread swap in cpu happens;
   bool did_swap = false;
-  
+
   do {
     if (ReadyQueue.size() != 0)
     {
@@ -211,6 +216,7 @@ void MyScheduler::PrintThreads(string name, list<ThreadDescriptorBlock*> threadL
   cout << "------------" << endl;
   cout << name << endl;
   cout << "------------" << endl;
+
   while (Threaditer != threadList.end())
   {
     PrintThreadBlock((*Threaditer));

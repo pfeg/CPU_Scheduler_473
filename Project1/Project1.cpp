@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
 	scheduler.PrintThreads("Threads", scheduler.Threads);
 
 	scheduler.Go();
-  
 	return 0;
 }
 
