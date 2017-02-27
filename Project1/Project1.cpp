@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
   
   for (int i = 0; i < totalThreads; i++)
 	{
-		ms.CreateThread(i + rand() % 5, rand() % 40, rand() % 20, i);
+		ms.CreateThread(i + rand() % 5, (rand() % 40) + 1, rand() % 20, i);
 	}
 
 	ms.PrintThreads("Threads", ms.Threads);
