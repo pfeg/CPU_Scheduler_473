@@ -48,7 +48,11 @@ private:
   void ShortestTimeRemainingWithoutPreemption();
   
   // Priority Based Scheduling, with preemption
+<<<<<<< HEAD
   void PrioritySchedulingWithPreemption();
+=======
+  void ProicitySchedulingWithPreemption();
+>>>>>>> origin/master
   
   void PrintThreadBlock(const ThreadDescriptorBlock *ThreadBlock);
   
