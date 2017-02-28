@@ -10,10 +10,10 @@ void RandomTestBench();
 
 int main(int argc, char* argv[])
 {
-  //TrailsTestBench();
+  TrailsTestBench();
   
   
-  RandomTestBench();
+  //RandomTestBench();
   
   
   
@@ -45,7 +45,7 @@ void RandomTestBench()
   for (int i = 0; i < totalThreads; i++)
   {
     t_arriving_time = i + rand() % 5;
-    t_remaining_time = rand() % 40;
+    t_remaining_time = rand() % 40 + 1;
     t_priority = rand() % 20;
     t_tid = i;
     
