@@ -22,19 +22,7 @@ void MyScheduler::CreateThread(int arriving_time, int remaining_time, int priori
 
 bool MyScheduler::Dispatch()
 {
-  // 1. Delete any threads that are finished.
-  list<ThreadDescriptorBlock*>::iterator threadIter;
-  threadIter = ReadyQueue.begin();
-  while (threadIter != ReadyQueue.end()) {
-    // thread is done.
-    if ((*threadIter)->remaining_time == 0)
-    {
-      //delete thread.
-      ReadyQueue.erase(threadIter);
-    }
-    threadIter++;
-  }
-  // 2. All threads are finished.
+  // 1. All threads are finished.
   if (Threads.size() == 0 && ReadyQueue.size() == 0)
   {
     int null_CPUs = 0;
@@ -50,7 +38,7 @@ bool MyScheduler::Dispatch()
       return false;
     }
   }
-  // 3. execute scheduling policy.
+  // 2. execute scheduling policy.
 	switch(policy)
 	{
 		case FCFS:		//First Come First Serve
