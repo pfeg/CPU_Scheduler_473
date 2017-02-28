@@ -72,8 +72,6 @@ bool MyScheduler::Dispatch()
 	return true;
 }
 
-
-
 void MyScheduler::FirstComeFirstServed()
 {
   // Moving threads that have arrived from Threads to ReadyQueue and sorting them by remaining time.
@@ -147,78 +145,75 @@ void MyScheduler::ShortestTimeRemainingWithoutPreemption()
   PrintThreads("ReadyQueue after after algorithm.", ReadyQueue);
 }
 
-
 void MyScheduler::ShortestTimeRemainingPreemption()
 {
-  // Moving threads that have arrived from Threads to ReadyQueue and sorting them by remaining time.
-  while (Threads.size() != 0 && Threads.front()->arriving_time <= timer)
-  {
-    ThreadDescriptorBlock* temp = Threads.front();
-    InsertThreadByLeastRemainingTime(temp, ReadyQueue);
-    Threads.pop_front();
-  }
-  //#debug
-  cout<< "Time: " << timer << endl;
-  PrintThreads("ReadyQueue after threads' arrival", ReadyQueue);
-  PrintCPUs("CPUs before Algorithm.");
+	// Moving threads that have arrived from Threads to ReadyQueue and sorting them by remaining time.
+	while (Threads.size() != 0 && Threads.front()->arriving_time <= timer)
+	{
+		ThreadDescriptorBlock* temp = Threads.front();	
+		InsertThreadByLeastRemainingTime(temp, ReadyQueue);
+		Threads.pop_front();
+	}
+
+	//#debug
+	cout<< "Time: " << timer << endl;
+	PrintThreads("ReadyQueue after threads' arrival", ReadyQueue);
+	PrintCPUs("CPUs before Algorithm.");
+    
+	// true if thread swap in cpu happens;
+	bool did_swap = false;
   
-  
-  // true if thread swap in cpu happens;
-  bool did_swap = false;
-  
-  do {
-    if (ReadyQueue.size() != 0)
-    {
-      // CPU with a thread currently with the largest
-      // reamining time compared to the other cpus.
-      // -1 means no CPU has a thread with remaining time greater
-      //  than some thread in the readyqueue.
-      int largest_cpu_remaining_time = -1;
-      for (int cpu_i = 0; cpu_i < num_cpu; cpu_i++)
-      {
-        // nothing in this cpu.
-        if (CPUs[cpu_i] == NULL)
-        {
-          largest_cpu_remaining_time = cpu_i;
+	do {
+		if (ReadyQueue.size() != 0)
+		{
+			// Index of CPU with the largest reamining time in its thread.
+			// -1 means no CPU has a thread with remaining time greater
+			//  than some thread in the readyqueue.
+			int largest_cpu_remaining_time = -1;
+			for (int cpu_i = 0; cpu_i < num_cpu; cpu_i++)
+			{
+				// nothing in this cpu.
+				if (CPUs[cpu_i] == NULL)
+				{
+					largest_cpu_remaining_time = cpu_i;
           
-          //exit loop
-          cpu_i = num_cpu;
-        }
-        else if (CPUs[cpu_i]->remaining_time > ReadyQueue.front()->remaining_time)
-        {
-          if (largest_cpu_remaining_time == -1 ||
-              CPUs[largest_cpu_remaining_time]->remaining_time < CPUs[cpu_i]->remaining_time)
-          {
-            largest_cpu_remaining_time = cpu_i;
-          }
-        }
-      }
-      if (largest_cpu_remaining_time != -1)
-      {
-        // temporarly save thread coming out of CPU.
-        ThreadDescriptorBlock *temp = CPUs[largest_cpu_remaining_time];
-        // save reference to this thread in this cpu.
-        CPUs[largest_cpu_remaining_time] = ReadyQueue.front();
-        // take thread out of readyQueue.
-        ReadyQueue.pop_front();
-        // a swap of two threads occurred.
-        did_swap = true;
-        // put thread that was in CPU back in readyQueue.
-        if (temp != NULL)
-        {
-          InsertThreadByLeastRemainingTime(temp, ReadyQueue);
-        }
-      }
-      else
-      {
-        did_swap = false;
-      }
-    }
-    else
-    {
-      did_swap = false;
-    }
-  } while (did_swap);
+					//exit loop
+					break;
+				}
+				else if (CPUs[cpu_i]->remaining_time > ReadyQueue.front()->remaining_time 
+					     && (largest_cpu_remaining_time == -1 || CPUs[largest_cpu_remaining_time]->remaining_time < CPUs[cpu_i]->remaining_time))
+				{
+					largest_cpu_remaining_time = cpu_i;
+				}
+			}
+
+			if (largest_cpu_remaining_time != -1)
+			{
+				// temporarly save thread coming out of CPU.
+				ThreadDescriptorBlock *temp = CPUs[largest_cpu_remaining_time];
+				// save reference to this thread in this cpu.
+				CPUs[largest_cpu_remaining_time] = ReadyQueue.front();
+				// take thread out of readyQueue.
+				ReadyQueue.pop_front();
+				// a swap of two threads occurred.
+				did_swap = true;
+				// put thread that was in CPU back in readyQueue.
+				if (temp != NULL)
+				{
+					InsertThreadByLeastRemainingTime(temp, ReadyQueue);
+				}
+			}
+			else
+			{
+				did_swap = false;
+			}
+		}
+		else
+		{
+			did_swap = false;
+		}
+	} while (did_swap);
+
   //#debug
   PrintCPUs("CPUs after algorithm.");
   PrintThreads("ReadyQueue after after algorithm.", ReadyQueue);
