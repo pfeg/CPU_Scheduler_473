@@ -302,13 +302,14 @@ void MyScheduler::InsertThreadByLeastRemainingTime(ThreadDescriptorBlock *temp, 
 
 void MyScheduler::InsertThreadByPriority(ThreadDescriptorBlock *temp, list<ThreadDescriptorBlock*> &ThreadList)
 {
-  list<ThreadDescriptorBlock*>::iterator ThreadIter;
-  ThreadIter = ThreadList.begin();
-  while (ThreadIter != ThreadList.end() && temp->priority > (*ThreadIter)->priority)
-  {
-    ThreadIter++;
-  }
-  ThreadList.insert(ThreadIter, temp);
+	list<ThreadDescriptorBlock*>::iterator ThreadIter;
+	ThreadIter = ThreadList.begin();
+
+	while (ThreadIter != ThreadList.end() && (temp->priority > (*ThreadIter)->priority || (temp->priority == (*ThreadIter)->priority && temp->arriving_time > (*ThreadIter)->arriving_time)))
+	{
+		ThreadIter++;
+	}
+	ThreadList.insert(ThreadIter, temp);
 }
 
 void MyScheduler::PrintThreads(string name, list<ThreadDescriptorBlock*> threadList)
