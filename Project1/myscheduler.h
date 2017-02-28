@@ -14,7 +14,7 @@
 
 class MyScheduler: public Scheduler {
 public:
-	MyScheduler(Policy p, unsigned int n) : Scheduler(p, n) {}
+	MyScheduler(Policy p, unsigned int n) : Scheduler(p, n) {enable_debug = false;}
 	bool Dispatch() override; //Function to implement scheduling policy and to keep a check on processed threads
 	void CreateThread(int arriving_time, int remaining_time, int priority, int tid) override; //Function to create threads and insert them in student defined data structure
   
@@ -30,6 +30,12 @@ public:
   void PrintThreads(string name, list<ThreadDescriptorBlock*> threadList);
   
   void PrintCPUs(string note);
+  
+  void PrintTimer();
+  
+  const int getTimer();
+  
+  bool enable_debug;
   
 private:
 

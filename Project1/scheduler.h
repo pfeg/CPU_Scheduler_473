@@ -60,6 +60,10 @@ public:
             cout << "Thread ID : " << CPUs[i]->tid << " Finishing Time : " << timer << " CPU No. : " << i << '\n';
             CPUs[i] = NULL;
           }
+          else if (CPUs[i]->remaining_time < 0)
+          {
+            
+          }
         }
       }
     }
