@@ -5,12 +5,12 @@
 
 double AvgFromList(list<int> data);
 void CreateListOfThreads(list<ThreadDescriptorBlock*> &ThreadList, int size);
-void TrailsTestBench();
+void TrialsTestBench();
 void RandomTestBench();
 
 int main(int argc, char* argv[])
 {
-  TrailsTestBench();
+  TrialsTestBench();
   
   
   //RandomTestBench();
@@ -61,7 +61,7 @@ void RandomTestBench()
   ms.Go();
 }
 
-void TrailsTestBench()
+void TrialsTestBench()
 {
   int numberOfCPUs = 5;
   Policy policy = FCFS;
@@ -91,16 +91,16 @@ void TrailsTestBench()
   
   //  cout << "\tUsing " << policyString << ", " << numberOfCPUs << " CPUs, random remaining times and arrivial time and priorities\n";
   
-  int trails = 20;
+  int trials = 20;
   
-  for (int trail_i = 0; trail_i < trails; trail_i++)
+  for (int trial_i = 0; trial_i < trials; trial_i++)
   {
     CreateListOfThreads(all_threads, totalThreads);
     for (int policy_i = 0; policy_i < 4; policy_i++)
     {
       policy = (Policy)policy_i;
       cout << "-----------" << endl;
-      cout << "policy: " << policy_i << " trail: " << trail_i << endl;
+      cout << "policy: " << policy_i << " trial: " << trial_i << endl;
       cout << "-----------" << endl;
       
       MyScheduler ms = MyScheduler(policy, numberOfCPUs);
