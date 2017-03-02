@@ -1,13 +1,8 @@
+
+// Group Members: Adam Geiger, Keegan Killen, Thomas Phegley
+
 #pragma once
 //myschedule.h
-/* Students need to define their own data structure to contain
-   and access objects from 'thread class'. The 'CreateThread()' 
-   function should insert the threads into the student defined
-   data structure after creating them.
-   They are allowed to add any additional functionality (only 
-   declaration in this file, define in 'myschedule.cpp')
-   which they might find helpful.*/
-
 #include "scheduler.h"
 #include <list>
 #include <string>
@@ -57,13 +52,5 @@ private:
   void PrioritySchedulingWithPreemption();
   
   void PrintThreadBlock(const ThreadDescriptorBlock *ThreadBlock);
-  
-	//Declare additional methods(s) below if needed.
-	/*
-	*
-	*
-	*
-	*
-	*/
   
 };

@@ -1,5 +1,5 @@
 //myschedule.cpp
-/*Define all the functions in 'myschedule.h' here.*/
+// Group Members: Adam Geiger, Keegan Killen, Thomas Phegley
 #include "myscheduler.h"
 
 //Function to Create Thread(s) and insert them in the student
